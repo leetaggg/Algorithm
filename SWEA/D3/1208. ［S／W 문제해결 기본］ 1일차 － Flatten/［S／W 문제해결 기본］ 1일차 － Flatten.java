@@ -15,7 +15,7 @@ public class Solution {
 			}
 			Arrays.sort(arr);
 			if(arr[99] - arr[0] == 0 ||arr[99] - arr[0] == 1) {
-				System.out.println(arr[99] - arr[9]);
+				System.out.println(String.format("#%d %d", test_case, arr[99] - arr[0]));
 				continue;
 			}
 			for(int i = 0; i < dump; i++) {
