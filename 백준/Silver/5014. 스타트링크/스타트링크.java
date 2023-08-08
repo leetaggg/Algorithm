@@ -4,7 +4,6 @@ import java.util.*;
 public class Main {
 	static int[] arr;
 	static int[] dUD = new int[2];
-	static boolean[] visited;
 	static int F, S, G, U, D;
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,24 +18,21 @@ public class Main {
 			return;
 		}
 		arr = new int[F + 1];
-		visited = new boolean[F + 1];
 		dUD[0] = U;
 		dUD[1] = -D;
 		bfs();
-		System.out.println(arr[G] == 0 ? "use the stairs" : arr[G]);
+		System.out.println(arr[G] == 0 ? "use the stairs" : arr[G] - 1);
 	}
-	
 	public static void bfs() {
 		Queue<Integer> q = new LinkedList<Integer>();
 		q.add(S);
-		visited[S] = true;
+		arr[S] = 1;
 		while(!q.isEmpty()) {
 			int dir = q.poll();
 			for(int nextDir : dUD) {
 				int nUD = dir + nextDir;
-				if(1 <= nUD && nUD <=F && !visited[nUD]) {
+				if(1 <= nUD && nUD <=F && arr[nUD] == 0) {
 					arr[nUD] = arr[dir] + 1;
-					visited[nUD] = true;
 					q.add(nUD);
 				}
 			}
