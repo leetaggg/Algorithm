@@ -1,41 +1,65 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int[] arr;
-	static int[] dUD = new int[2];
-	static int F, S, G, U, D;
-	public static void main(String[] args) throws IOException{
+
+	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		F = Integer.parseInt(st.nextToken());
-		S = Integer.parseInt(st.nextToken());
-		G = Integer.parseInt(st.nextToken());
-		U = Integer.parseInt(st.nextToken());
-		D = Integer.parseInt(st.nextToken());
-		if(S == G) {
-			System.out.println(0);
-			return;
-		}
-		arr = new int[F + 1];
-		dUD[0] = U;
-		dUD[1] = -D;
-		bfs();
-		System.out.println(arr[G] == 0 ? "use the stairs" : arr[G] - 1);
-	}
-	public static void bfs() {
-		Queue<Integer> q = new LinkedList<Integer>();
-		q.add(S);
-		arr[S] = 1;
-		while(!q.isEmpty()) {
-			int dir = q.poll();
-			for(int nextDir : dUD) {
-				int nUD = dir + nextDir;
-				if(1 <= nUD && nUD <=F && arr[nUD] == 0) {
-					arr[nUD] = arr[dir] + 1;
-					q.add(nUD);
-				}
+		StringBuilder sb = new StringBuilder();
+		
+		int F = Integer.parseInt(st.nextToken());//총 수
+		int S = Integer.parseInt(st.nextToken());//시작점
+		int G = Integer.parseInt(st.nextToken());//도착점
+		int U = Integer.parseInt(st.nextToken());//위
+		int D = Integer.parseInt(st.nextToken());//아래
+		
+		int answer = -1;
+		int index = 0;
+		int[] floor = {U, -D}; //업,다운
+		Queue<int[]> queue = new ArrayDeque<int[]>();
+		boolean[] visited = new boolean[F+1];
+		//시작점 넣기
+		queue.offer(new int[] {S, index}); //지점, 몇번 갔는지 카운트
+		
+		while(! queue.isEmpty()) {
+			int[] current = queue.poll();
+			index = current[1];
+			
+			
+			if(current[0] == G) {
+				answer = current[1];
+				break;
 			}
+			
+			int next_up = current[0]+floor[0];
+			int next_dw = current[0]+floor[1];
+			
+			if(next_up <= F && next_up > 0 && !visited[next_up]) { //다음층이 도착점보다 작거나 같을경우
+				//큐에 넣기
+				queue.offer(new int[] {next_up, index+1});
+				visited[next_up] = true;
+			
+			}
+			if(next_dw <= F && next_dw > 0 && !visited[next_dw]) { //다음층이 도착점보다 작거나 같을경우
+				//큐에 넣기
+				queue.offer(new int[] {next_dw, index+1});
+				visited[next_dw] = true;
+			
+			}
+		}//end while
+		
+		if(answer == -1) {
+			System.out.println("use the stairs");
+		}else {
+			System.out.println(index);
 		}
+		
 	}
+
 }
