@@ -1,55 +1,55 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-
-	static int[][] arr;
-	static int white = 0;
-	static int blue = 0;
+	
+	static int spaces[][];
+	static int white, green;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
-		arr = new int[n][n];
-		StringTokenizer st;
-		for (int i = 0; i < n; i++) {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		spaces = new int[N][N];
+		
+		for (int r = 0; r < N; r++) {
 			st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < n; j++) {
-				arr[i][j] = Integer.parseInt(st.nextToken());
+			for (int c = 0; c < N; c++) {
+				spaces[r][c] = Integer.parseInt(st.nextToken());
 			}
 		}
-		recursion(0, 0, n);
+		
+		makeSpace(0, 0, N);
 		System.out.println(white);
-		System.out.println(blue);
+		System.out.println(green);
+			
 	}
 
-	public static void recursion(int x, int y, int size) {
-		if (isCheck(x, y, size)) {
-			if (arr[x][y] == 0) {
-				white++;
-			} else {
-				blue++;
-			}
-			return;
-		}
-		int nextSize = size / 2;
-		recursion(x, y, nextSize);
-		recursion(x, y + nextSize, nextSize);
-		recursion(x + nextSize, y, nextSize);
-		recursion(x + nextSize, y + nextSize, nextSize);
-
-	}
-
-	public static boolean isCheck(int x, int y, int size) {
-		int check = arr[x][y];
-
-		for (int i = x; i < x + size; i++) {
-			for (int j = y; j < y + size; j++) {
-				if (arr[i][j] != check) {
-					return false;
-				}
+	private static void makeSpace(int sr, int sc, int size) { //영역의 좌상단 r,c, 영역크기 size
+		
+		int sum = 0;
+		
+		for (int r = sr; r < sr+size; r++) {
+			for (int c = sc; c < sc+size; c++) {
+				sum += spaces[r][c];
 			}
 		}
-		return true;
+		
+		if(sum == 0) {//하얀색 : 모두 하얀색인 공간(기저조건)
+			white++;
+			
+		}else if(sum == size*size) { //모두 초록색인 공간(기저조건)
+			green++;
+			
+		}else { //두 색이 섞여있는 공간
+			int half = size/2;
+			makeSpace(sr, sc, half); //1
+			makeSpace(sr, sc+half, half); //2
+			makeSpace(sr+half, sc, half); //3
+			makeSpace(sr+half, sc+half, half); //4
+			
+		}
 	}
 }
