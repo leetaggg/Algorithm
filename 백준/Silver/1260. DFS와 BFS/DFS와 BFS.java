@@ -1,57 +1,76 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int[][] graph;
-	static int n, m;
-	static boolean[] visited;
-	static StringBuilder sb = new StringBuilder();
-	public static void main(String[] args) throws IOException{
+	static boolean visited[];
+	static ArrayList<Integer>[] A;
+	
+
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		int v = Integer.parseInt(st.nextToken());
-		graph = new int[n + 1][n + 1];		
-		for(int i = 0; i < m; i++) {
-			st = new StringTokenizer(br.readLine()," ");
-			int to = Integer.parseInt(st.nextToken());
-			int from = Integer.parseInt(st.nextToken());
-			graph[to][from] = graph[from][to] = 1;
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		int start = Integer.parseInt(st.nextToken());
+		
+		A = new ArrayList[n+1];
+		for(int i=1; i<=n; i++) {
+			A[i] = new ArrayList<Integer>();
 		}
-		visited = new boolean[n + 1];
-		sb.append(v).append(" ");
-		visited[v] = true;
-		dfs(v);
-		sb.append("\n");
-		visited = new boolean[n + 1];
-		bfs(v);
-		System.out.println(sb.toString());
+		
+		for(int i=0; i<m; i++) {//그래프 그리기.
+			st = new StringTokenizer(br.readLine());
+			int s = Integer.parseInt(st.nextToken());
+			int e = Integer.parseInt(st.nextToken());
+			A[s].add(e);
+			A[e].add(s);
+		}
+		//번호가 작은것 부터 먼저 방문
+		for(int i=1; i<=n; i++) {
+			Collections.sort(A[i]);
+		}
+		
+		visited = new boolean[n+1];
+		DFS(start);
+		System.out.println();
+		visited = new boolean[n+1];
+		BFS(start);
+		System.out.println();
+	}
+
+
+	private static void DFS(int Node) {
+		System.out.print(Node + " ");
+		visited[Node] = true;//true로 바꾸고
+		for(int i: A[Node]) {
+			if(!visited[i])//방문하지 않았으면 실행
+				DFS(i);
+		}
 	}
 	
-	public static void dfs(int start) {
-		for(int i = 1; i <= n; i++) {
-			if(graph[start][i] == 1 && !visited[i]) {
-				sb.append(i).append(" ");
-				visited[i] = true;
-				dfs(i);
-			}
-		}
-	}
-	public static void bfs(int start) {
-		Queue<Integer> q = new LinkedList<Integer>();
-		q.add(start);
-		visited[start] = true;
-		sb.append(start).append(" ");
-		while(!q.isEmpty()){
-			int current = q.poll();
-			for(int i = 1; i <= n; i++) {
-				if(graph[current][i] == 1 && !visited[i]) {
+	private static void BFS(int Node) {
+		Queue<Integer> queue = new LinkedList<Integer>();
+		queue.add(Node);
+		visited[Node] = true;
+		
+		while(!queue.isEmpty()) {
+			int now_Node = queue.poll();//젤 먼저들어간것 빼기
+			System.out.print(now_Node + " ");
+			for(int i: A[now_Node]) {
+				if(!visited[i]) {
 					visited[i] = true;
-					sb.append(i).append(" ");
-					q.add(i);
+					queue.add(i);
 				}
 			}
 		}
+		
 	}
+
 }
