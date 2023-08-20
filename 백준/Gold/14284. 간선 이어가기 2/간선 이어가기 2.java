@@ -3,7 +3,6 @@ import java.util.*;
 public class Main {
     static ArrayList<ArrayList<Node>> graph = new ArrayList<>();
     static final int INF = Integer.MAX_VALUE;
-    static boolean[] visited;
     static int[] dist;
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,7 +23,6 @@ public class Main {
         st = new StringTokenizer(br.readLine());
         int start = Integer.parseInt(st.nextToken());
         int end = Integer.parseInt(st.nextToken());
-        visited = new boolean[n + 1];
         dist = new int[n + 1];
         Arrays.fill(dist, INF);
         dijkstra(start);
@@ -36,10 +34,11 @@ public class Main {
         pq.offer(new Node(start, 0));
         dist[start] = 0;
         while (!pq.isEmpty()){
-            int nowNode = pq.poll().idx;;
-            for(Node nextNode : graph.get(nowNode)){
-                if(dist[nowNode] + nextNode.weight < dist[nextNode.idx]){
-                    dist[nextNode.idx] = dist[nowNode] + nextNode.weight;
+            Node nowNode = pq.poll();
+            if(dist[nowNode.idx] < nowNode.weight) continue;
+            for(Node nextNode : graph.get(nowNode.idx)){
+                if(dist[nowNode.idx] + nextNode.weight < dist[nextNode.idx]){
+                    dist[nextNode.idx] = dist[nowNode.idx] + nextNode.weight;
                     pq.offer(new Node(nextNode.idx, dist[nextNode.idx]));
                 }
             }
