@@ -1,29 +1,24 @@
-import java.io.BufferedReader;//버퍼리더선언
-import java.io.IOException;//임포트선언
-import java.io.InputStreamReader;//임포트선언
+import java.io.*; // io 라이브러리 import
 
-public class Main {//클래스명
-
-	public static void main(String[] args) throws NumberFormatException, IOException {//메인함수시작
-		//버튼 a,b,c - 300초, 60초, 10초
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));//버퍼리더
-		int T = Integer.parseInt(br.readLine()); // 요리시간 입력 받음
+public class Main { // class 시작
+	public static void main(String[] args) throws IOException{ // main 클래스 시작, IOException 던짐
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // 입력받는 bufferedReader 생성
+		int t = Integer.parseInt(br.readLine()); // 입력 받은 t int형으로 변환
+		int btnA = 0; // A버튼 누른 횟수
+		int btnB = 0; // B버튼 누른 횟수
+		int btnC = 0; // C버튼 누른 횟수
+		btnA = t / 300; // t를 A버튼(5분 * 60초)로 나눈 몫을 btnA에 저장
+		t = t % 300; // t를 A버튼(5분 * 60초)로 나눈 나머지로 저장
 		
-		int[] button = {300, 60, 10}; //버튼 3개 300초 60초 10초
+		btnB = t / 60;// t를 B버튼(1분 * 60초)로 나눈 몫을 btnB에 저장
+		t = t % 60;// t를 B버튼(1분 * 60초)로 나눈 나머지로 저장
 		
-		for(int i = T/button[0]; i >= 0; i--) { //첫번째 버튼으로 셀수 있는 수만큼
-			int time = T-(button[0]*i);// 남은 시간
-			for(int j = time/button[1]; j >= 0; j--) { //두번째 버튼으로 셀수 있는 수만큼
-				time = T-(button[1]*j);// 남은 시간
-				if(time % button[2] == 0) {//세번째 나머지 값도 떨어지면
-					int k = time / button[2]; //마지막 알람시계 누르는 횟수
-					System.out.println(i+" "+ j +" "+k);//출력
-					return;//된다면 리턴
-				}
-			}
-		}
-		System.out.println(-1);//안된다면 -1출력
-		
-	}
-
-}
+		btnC = t / 10; // t를 C버튼(10초)로 나눈 몫을 btnC에 저장
+		t = t % 10; // t를 C버튼(10초)로 나눈 나머지로 저장
+		if(t == 0) { // 마지막 t 값이 0이면
+			System.out.println(btnA + " " + btnB + " " + btnC); // 각 버튼을 누른 횟수를 출력
+		} else { // t가 0이 아니라면
+			System.out.println(-1); // -1로 출력
+		}// if - else문 종료
+	} // main 끝
+} // class 끝
