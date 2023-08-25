@@ -29,6 +29,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
 		
 		int V = Integer.parseInt(st.nextToken());
 		int E = Integer.parseInt(st.nextToken());
@@ -82,11 +83,10 @@ public class Main {
 		
 		for (int i = 1; i < answer.length; i++) {
 			if(answer[i] == Integer.MAX_VALUE)
-				System.out.println("INF");
+				sb.append("INF").append("\n");
 			else
-				System.out.println(answer[i]);
+				sb.append(answer[i]).append("\n");
 		}
-		
+		System.out.println(sb.toString());
 	}
-
 }
