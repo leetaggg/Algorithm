@@ -1,35 +1,42 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
 
-        int[][] homeRGB = new int[n][3];
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		int[][] rgb = new int[3][n+1];
+		
+		for (int i = 0; i < n; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+			rgb[0][i] = Integer.parseInt(st.nextToken());
+			rgb[1][i] = Integer.parseInt(st.nextToken());
+			rgb[2][i] = Integer.parseInt(st.nextToken());
+		} //입력 끝
+		
+		int[][] dp = new int[3][n];
+		
+	    //dp 0행 채우기. rgb[i][0]값. - 초기화
+		for(int i = 0; i < 3; i++) {
+			dp[i][0] = rgb[i][0];
+		}
+		
+		int index = 0;
+		int min = Integer.MAX_VALUE;
+		for (int j = 1; j < n; j++) { //집 개수
+			
+			dp[0][j] = rgb[0][j] + Math.min(dp[1][j-1], dp[2][j-1]);
+			dp[1][j] = rgb[1][j] + Math.min(dp[0][j-1], dp[2][j-1]);
+			dp[2][j] = rgb[2][j] + Math.min(dp[0][j-1], dp[1][j-1]);
+			
+		}
+			
+		System.out.println(Math.min(dp[0][n-1], Math.min(dp[1][n-1], dp[2][n-1])));
+					
+	}
 
-        for (int i = 0; i < n; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            homeRGB[i][0] = Integer.parseInt(st.nextToken());
-            homeRGB[i][1] = Integer.parseInt(st.nextToken());
-            homeRGB[i][2] = Integer.parseInt(st.nextToken());
-        }
-
-        int[][] dp = new int[n][3];
-        for (int i = 0; i < n; i++) {
-            Arrays.fill(dp[i], Integer.MAX_VALUE);
-        }
-        dp[0][0] = homeRGB[0][0];
-        dp[0][1] = homeRGB[0][1];
-        dp[0][2] = homeRGB[0][2];
-
-        for (int i = 1; i < n; i++) {
-            dp[i][0] = Math.min(dp[i - 1][1] + homeRGB[i][0], dp[i - 1][2] + homeRGB[i][0]);
-            dp[i][1] = Math.min(dp[i - 1][0] + homeRGB[i][1], dp[i - 1][2] + homeRGB[i][1]);
-            dp[i][2] = Math.min(dp[i - 1][0] + homeRGB[i][2], dp[i - 1][1] + homeRGB[i][2]);
-        }
-
-        System.out.println(Math.min(dp[n - 1][0], Math.min(dp[n - 1][1], dp[n - 1][2])));
-
-    }
 }
