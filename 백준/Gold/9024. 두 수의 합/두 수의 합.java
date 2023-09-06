@@ -4,10 +4,12 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         int T = Integer.parseInt(br.readLine());
         int[] arr = new int[1000001];
 
         for (int testCase = 1; testCase <= T; testCase++) {
+            System.gc();
             StringTokenizer st = new StringTokenizer(br.readLine());
             int n = Integer.parseInt(st.nextToken());
             int k = Integer.parseInt(st.nextToken());
@@ -39,7 +41,8 @@ public class Main {
                     cnt++;
                 }
             }
-            System.out.println(cnt);
+            sb.append(cnt).append("\n");
         }
+        System.out.println(sb);
     }
 }
