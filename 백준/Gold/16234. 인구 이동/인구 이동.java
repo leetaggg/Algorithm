@@ -1,144 +1,96 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+    static int[][] map;
+    static int n, L, R;
+    static boolean[][] visited;
+    static int[] dr = {-1, 1, 0, 0};
+    static int[] dc = {0, 0, -1, 1};
 
-	private static int N;
-	private static int L;
-	private static int R;
-	private static int[][] arr;
-	private static int[][] isVisited;
-	private static int[][] dist = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }; // 상하좌우
-	private static int flag;
+    static boolean flag;
 
-	static class Location {
-		int x;
-		int y;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-		public Location(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
+        n = Integer.parseInt(st.nextToken());
+        L = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        map = new int[n][n];
 
-		N = Integer.parseInt(st.nextToken());
-		L = Integer.parseInt(st.nextToken());
-		R = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < n; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
 
-		arr = new int[N][N];
-		isVisited = new int[N][N];
-		
-		for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			for (int j = 0; j < N; j++) {
-				arr[i][j] = Integer.parseInt(st.nextToken());
-			}
-		} // 입력 끝
+        flag = true;
 
-		int answer = 0;
-		while (true) {
-			flag = 0;
-			int cnt = 1;
-			for (int i = 0; i < N; i++) {
-				Arrays.fill(isVisited[i], 0);
-			}
-			
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
-					if (isVisited[i][j] == 0) {// 방문하지 않았을 경우
-						bfs(i, j, cnt); // 관련된 섬 짓기
-						
-						cnt++;
-					}
-				}
-				
-			}
-			
-			
-			if(flag == 0) {
-				break;
-			}
-			answer++;
-			
-		} // while 끝
-		
-		System.out.println(answer);
-	}// 메인 끝
+        int result = 0;
 
-	/**
-	 * 배열 바꾸는 함수
-	 * 
-	 * @param num
-	 * @param target
-	 */
-	public static void convertArr(int cnt, int convert) {
+        while(true){
+            visited = new boolean[n][n];
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (isVisited[i][j] == cnt) {
-					arr[i][j] = convert;
-				}
-			}
-		}
-	}
+            int sum = 0;
 
-	public static void bfs(int x, int y, int cnt) {
-		
-		Queue<Location> queue = new ArrayDeque<Location>();
-		queue.offer(new Location(x, y)); // 시작점 넣기
-		isVisited[x][y] = cnt;
-		int sum = arr[x][y];
-		int index = 1;
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if(!visited[i][j]){
+                        sum += bfs(i, j);
+                    }
+                }
+            }
+            if(sum == 0) break;
 
-		while (!queue.isEmpty()) { // 연합군 체크 하기
-			Location current = queue.poll();
+            result++;
+        }
+        System.out.println(result);
+    }
 
-			for (int i = 0; i < dist.length; i++) {
-				int nx = current.x + dist[i][0];
-				int ny = current.y + dist[i][1];
+    static int bfs(int r, int c){
+        Queue<int[]> inq = new LinkedList<>();
+        inq.offer(new int[] {r, c});
+        visited[r][c] = true;
 
-				if (nx < 0 || nx >= N || ny < 0 || ny >= N || isVisited[nx][ny] != 0) {
-					// 범위 체크 && 방문 했을 경우
-					continue;
-				}
+        Queue<int[]> outq = new LinkedList<>();
+        outq.offer(new int[] {r, c});
 
-				// arr에 있는 값과 상하 좌우 값을 L이상 R 이하인지 체크 후 isVisited 에 체크 하기
-				int prev = arr[current.x][current.y];
-				int now = arr[nx][ny];
-				if (calculate(prev, now)) { // true : 연합군일 경우 - 인구이동있음
-					isVisited[nx][ny] = cnt;
-					flag = 1;
-					sum += arr[nx][ny];
-					index++;
-					queue.offer(new Location(nx, ny));
-				}
+        int sum = map[r][c];
+        int size = 1;
 
-			} // 상하좌우 for
-		} // queue 가 빌때까지 체크
-//		System.out.println(sum);
-		convertArr(cnt, sum/index);
-		
-	} // bfs 함수 끝
+        while(!inq.isEmpty()){
+            int[] node = inq.poll();
+            int cr = node[0];
+            int cc = node[1];
+            for (int i = 0; i < 4; i++) {
+                int nr = cr + dr[i];
+                int nc = cc + dc[i];
+                if(0 <= nr && nr < n && 0 <= nc && nc < n && !visited[nr][nc]){
+                    int diff = Math.abs(map[cr][cc] - map[nr][nc]);
+                    if(L <= diff && diff <= R){
+                        visited[nr][nc] = true;
+                        inq.offer(new int[] {nr, nc});
+                        outq.offer(new int[] {nr, nc});
+                        sum += map[nr][nc];
+                        size++;
+                    }
+                }
+            }
+        }
 
-	/**
-	 * arr 상하좌우 값이 L이상 R 이하 인지 계산하는 함수
-	 */
-	public static boolean calculate(int prev, int now) {
+        if(size == 1){
+            return 0;
+        } else{
+            int avg = sum / size;
+            while(!outq.isEmpty()){
+                int[] node = outq.poll();
+                map[node[0]][node[1]] = avg;
+            }
+            return size;
+        }
 
-		int target = Math.abs(prev - now);
-		if (target >= L && target <= R) {
-			return true;
-		}
-		return false;
-	}
-
-}// 클래스 끝
+    }
+}
