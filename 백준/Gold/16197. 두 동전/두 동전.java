@@ -1,138 +1,104 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main {
+    static int[][] board;
+    static int n, m;
+    static boolean[][][][] visited;
+    static Coins coins;
+    static int[][] dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-	static class Location {
-		int x1;
-		int y1;
-		int x2;
-		int y2;
-		int cnt;
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
 
-		public Location(int x1, int y1, int x2, int y2, int cnt) {
-			this.x1 = x1;
-			this.y1 = y1;
-			this.x2 = x2;
-			this.y2 = y2;
-			this.cnt = cnt;
-		}
+        int r1 = -1, r2 = -1, c1 = -1, c2 = -1;
+        board = new int[n][m];
+        visited = new boolean[6][2][6][2];
 
-	}
+        for (int i = 0; i < n; i++) {
+            char[] line = br.readLine().toCharArray();
+            for (int j = 0; j < m; j++) {
+                char c = line[j];
+                if(c == '.'){
+                    board[i][j] = 1;
+                }else if(c == '#'){
+                    board[i][j] = -1;
+                }else{
+                    if(r1 == -1){
+                        r1 = i;
+                        c1 = j;
+                    }else{
+                        r2 = i;
+                        c2 = j;
+                    }
+                }
+            }
+        }
+        coins = new Coins(r1, c1, r2, c2, 0);
 
-	private static int[][] button = { { 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0 } };// 네개의 버튼(왼, 오, 위, 아래)
-	private static char[][] map;
-	private static int n;
-	private static int m;
-	private static boolean[][] isVisited;
+        System.out.println(bfs());
+    }
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		n = Integer.parseInt(st.nextToken()); // 세로
-		m = Integer.parseInt(st.nextToken()); // 가로
-		map = new char[n][m]; // 보드
-		isVisited = new boolean[n][m]; // 보드
-		int ax = -1;
-		int ay = -1;
-		int bx = -1;
-		int by = -1;
-		int cnt = 0;
-		for (int i = 0; i < n; i++) {
-			String input = br.readLine();
-			for (int j = 0; j < m; j++) {
-				map[i][j] = input.charAt(j);
-				if (map[i][j] == 'o') {
-					if (cnt == 1) {
-						// 동전 2 위치
-						bx = i;
-						by = j;
-					} else {
-						// 동전1 위치
-						ax = i;
-						ay = j;
-						cnt++;
-					}
-				}
-			}
-		}
+    static int bfs(){
+        Queue<Coins> q = new LinkedList<>();
+        q.offer(coins);
+        int cnt = -1;
+        while (!q.isEmpty()){
+            Coins c = q.poll();
+            for (int[] drc : dir) {
+                int nr1 = c.r1 + drc[0];
+                int nr2 = c.r2 + drc[0];
+                int nc1 = c.c1 + drc[1];
+                int nc2 = c.c2 + drc[1];
 
-		int answer = bfs(ax, ay, bx, by);
-		System.out.println(answer);
+                int dropCnt = 0;
 
-	}// end main
+                if(nr1 < 0 || nc1 < 0 || nr1 >= n || nc1 >= m){
+                    dropCnt++;
+                }
+                if(nr2 < 0 || nc2 < 0 || nr2 >= n || nc2 >= m){
+                    dropCnt++;
+                }
 
-	// 두 동전 중 하나만 보드에서 떨어뜨리기 위해 최소 몇번 버튼을 눌러야하나?
+                if(dropCnt == 0){
+                    if(board[nr1][nc1] == -1){
+                        nr1 = c.r1;
+                        nc1 = c.c1;
+                    }
+                    if(board[nr2][nc2] == -1){
+                        nr2 = c.r2;
+                        nc2 = c.c2;
+                    }
 
-	public static int bfs(int x1, int y1, int x2, int y2) {
-		Queue<Location> queue = new ArrayDeque<Location>();
-		queue.offer(new Location(x1, y1, x2, y2, 0));
+                    if(c.cnt >= 10) {
+                        return -1;
+                    }
 
-		while (!queue.isEmpty()) {
-			Location current = queue.poll();
+                    q.offer(new Coins(nr1, nc1, nr2, nc2, c.cnt + 1));
+                }else if(dropCnt == 1){
+                    return c.cnt + 1;
+                }
+            }
+        }
+        return cnt;
+    }
 
-			if (current.cnt == 10) {
-				return -1;
-			}
+    static class Coins{
+        int r1;
+        int c1;
+        int r2;
+        int c2;
+        int cnt;
 
-			for (int i = 0; i < 4; i++) {
-				int drop = 0;
-				int nx1 = current.x1 + button[i][0];
-				int ny1 = current.y1 + button[i][1];
-				int nx2 = current.x2 + button[i][0];
-				int ny2 = current.y2 + button[i][1];
-
-//				System.out.println("nx1: " + nx1 + " ,ny1: " + ny1 + " ,drop: " + drop);
-//				System.out.println("nx2: " + nx2 + " ,ny2: " + ny2 + " ,q: " + queue.size());
-
-				// 이동하려는 방향에 칸이 없으면 동전은 보드 밖으로 떨어짐
-				if (nx1 < 0 || nx1 >= n || ny1 < 0 || ny1 >= m) {
-					drop++;
-				}
-				if (nx2 < 0 || nx2 >= n || ny2 < 0 || ny2 >= m) {
-					drop++;
-				}
-
-//				System.out.println(drop);
-				if (drop == 1) { // 하나만 떨어짐
-					return current.cnt + 1;
-				}
-				if (drop == 2) {
-					continue; // 다 떨어진 경우
-				}
-//				System.out.println("" + map[nx1][ny1] + "/" + map[nx2][ny2]);
-
-				// 벽 - 벽
-				if (map[nx1][ny1] == '#' && map[nx2][ny2] == '#') {
-//					map[nx1][ny1] = map[nx2][ny2] = 1;
-//					System.out.println(111);
-					continue;
-				}
-				// 벽 - 이동
-				if (map[nx1][ny1] == '#') {
-					queue.offer(new Location(current.x1, current.y1, nx2, ny2, current.cnt + 1));
-//					map[nx2][ny2] = map[current.x1][current.y1] = 1;
-//					System.out.println(1112);
-					continue;
-				}
-				// 이동 - 벽
-				if (map[nx2][ny2] == '#') {
-					queue.offer(new Location(nx1, ny1, current.x2, current.y2, current.cnt + 1));
-//					map[nx1][ny1] = map[current.x2][current.y2] = 1;
-//					System.out.println(1113);
-					continue;
-				}
-				// 이동 - 이동
-					queue.offer(new Location(nx1, ny1, nx2, ny2, current.cnt + 1));
-//					map[nx1][ny1] = map[nx2][ny2] = 1;
-//					System.out.println(1114);
-
-			} // for 끝
-		} // while 끝
-		return -1;
-
-	}// end bfs
-
-}// end class
+        public Coins(int r1, int c1, int r2, int c2, int cnt) {
+            this.r1 = r1;
+            this.c1 = c1;
+            this.r2 = r2;
+            this.c2 = c2;
+            this.cnt = cnt;
+        }
+    }
+}
