@@ -16,7 +16,7 @@ public class Main {
 
         int r1 = -1, r2 = -1, c1 = -1, c2 = -1;
         board = new int[n][m];
-        visited = new boolean[6][2][6][2];
+        visited = new boolean[n][m][n][m];
 
         for (int i = 0; i < n; i++) {
             char[] line = br.readLine().toCharArray();
@@ -46,6 +46,7 @@ public class Main {
         Queue<Coins> q = new LinkedList<>();
         q.offer(coins);
         int cnt = -1;
+        visited[coins.r1][coins.c1][coins.r2][coins.c2] = true;
         while (!q.isEmpty()){
             Coins c = q.poll();
             for (int[] drc : dir) {
@@ -63,24 +64,27 @@ public class Main {
                     dropCnt++;
                 }
 
-                if(dropCnt == 0){
-                    if(board[nr1][nc1] == -1){
-                        nr1 = c.r1;
-                        nc1 = c.c1;
-                    }
-                    if(board[nr2][nc2] == -1){
-                        nr2 = c.r2;
-                        nc2 = c.c2;
-                    }
-
-                    if(c.cnt >= 10) {
-                        return -1;
-                    }
-
-                    q.offer(new Coins(nr1, nc1, nr2, nc2, c.cnt + 1));
-                }else if(dropCnt == 1){
+                if(dropCnt == 1){
                     return c.cnt + 1;
+                } else if (dropCnt == 2) {
+                    continue;
                 }
+
+                if(c.cnt >= 10) return -1;
+
+                if(board[nr1][nc1] == -1){
+                    nr1 = c.r1;
+                    nc1 = c.c1;
+                }
+                if(board[nr2][nc2] == -1){
+                    nr2 = c.r2;
+                    nc2 = c.c2;
+                }
+
+                if(visited[nr1][nc1][nr2][nc2]) continue;
+                visited[nr1][nc1][nr2][nc2] = true;
+                q.offer(new Coins(nr1, nc1, nr2, nc2, c.cnt + 1));
+
             }
         }
         return cnt;
