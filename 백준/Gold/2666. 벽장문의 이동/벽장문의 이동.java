@@ -1,52 +1,51 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    private static int num;
-    private static int[] bookwall;
 
-    public static void main(String[] args) throws NumberFormatException, IOException {
+    static int result, n, m;
+    static int[] targets;
+
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine()); //n개의 같은 크기의 벽장
-        
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        int[] door = new int[2];
-        door[0] = Integer.parseInt(st.nextToken());
-        door[1] = Integer.parseInt(st.nextToken()); //문 두개
-        Arrays.sort(door);
-        
-        num = Integer.parseInt(br.readLine());
-        
-        bookwall = new int[num];
-        for (int i = 0; i < num; i++) {
-            bookwall[i] = Integer.parseInt(br.readLine()); //사용할 벽장 수
-        } //입력 끝
-        
-        //구현
-      
-        System.out.println(dfs(0, door[0], door[1]));
-        
-    }
+        n = Integer.parseInt(br.readLine());
 
-//    private static int min = Integer.MAX_VALUE;
-    
-    private static int dfs(int depth, int door1, int door2) {
-        //기저조건
-        if(depth == num) {
-            //모든걸 다 돌았다면 리턴
-            return 0;
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int o1 = Integer.parseInt(st.nextToken());
+        int o2 = Integer.parseInt(st.nextToken());
+
+        int left = Math.min(o1, o2);
+        int right = Math.max(o1, o2);
+
+        m = Integer.parseInt(br.readLine());
+
+        targets = new int[m];
+
+        for (int i = 0; i < m; i++) {
+            targets[i] = Integer.parseInt(br.readLine());
         }
 
-        //dfs(횟수-깊이, 문1, 문2 target)
-        int answer1 = dfs(depth+1, door1, bookwall[depth]) + Math.abs(door2-bookwall[depth]);
-        
-        int answer2 = dfs(depth+1, bookwall[depth], door2) + Math.abs(door1-bookwall[depth]);
+        result = Integer.MAX_VALUE;
 
-        // 값 다시 비교
-        return Math.min(answer1, answer2);
-     }
-        
+        dfs(left, right, 0, 0);
+
+        System.out.println(result);
+    }
+
+    private static void dfs(int left, int right, int cnt ,int depth){
+        if(depth == m){
+            result = Math.min(result, cnt);
+            return;
+        }
+
+        if(left >= targets[depth]){
+            dfs(targets[depth], right, cnt + left - targets[depth], depth + 1);
+        } else if (left < targets[depth] && targets[depth] < right) {
+            dfs(targets[depth], right, cnt + Math.abs(left - targets[depth]), depth + 1);
+            dfs(left, targets[depth], cnt + Math.abs(right - targets[depth]), depth + 1);
+        }else{
+            dfs(left, targets[depth], cnt + targets[depth] - right, depth + 1);
+        }
+    }
 }
