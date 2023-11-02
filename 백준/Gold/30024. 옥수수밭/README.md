@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 105840 KB, 시간: 920 ms
+메모리: 136720 KB, 시간: 1020 ms
 
 ### 분류
 
@@ -12,13 +12,13 @@
 
 ### 제출 일자
 
-2023년 11월 1일 16:12:28
+2023년 11월 2일 10:22:10
 
 ### 문제 설명
 
 <p>옥수수밭 주인 민석이는 한 해 동안 열심히 기른 옥수수를 수확하려고 한다. 옥수수밭은 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D441 TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$N$</span></mjx-container>행 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D440 TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>M</mi></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$M$</span></mjx-container>열의 격자로 생각할 수 있는데, 격자의 각 칸에는 한 그루의 옥수수가 심어져 있다. 민석이는 각 옥수수의 가치를 측정해서 서로 다른 정수 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mn class="mjx-n"><mjx-c class="mjx-c31"></mjx-c></mjx-mn><mjx-mo class="mjx-n"><mjx-c class="mjx-c2C"></mjx-c></mjx-mo><mjx-mn class="mjx-n" space="2"><mjx-c class="mjx-c32"></mjx-c></mjx-mn><mjx-mo class="mjx-n"><mjx-c class="mjx-c2C"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="2"><mjx-c class="mjx-c22EF"></mjx-c></mjx-mo><mjx-mo class="mjx-n" space="2"><mjx-c class="mjx-c2C"></mjx-c></mjx-mo><mjx-mi class="mjx-i" space="2"><mjx-c class="mjx-c1D441 TEX-I"></mjx-c></mjx-mi><mjx-mo class="mjx-n" space="3"><mjx-c class="mjx-cD7"></mjx-c></mjx-mo><mjx-mi class="mjx-i" space="3"><mjx-c class="mjx-c1D440 TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mo>⋯</mo><mo>,</mo><mi>N</mi><mo>×</mo><mi>M</mi></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$1,2,\cdots ,N\times M$</span></mjx-container>을 부여했다.</p>
 
-<p style="text-align: center;"><img alt="" src="" width="400px"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/8bfc31ad-3ecd-4a0b-aafe-9ef98a081e27/-/preview/" width="400px"></p>
 
 <p>민석이는 처음에 옥수수밭 바깥에 위치한다. 민석이는 옥수수밭 바깥을 돌아다니면서 옥수수밭 바깥과 인접한 칸의 옥수수를 수확할 수 있다. 또는 옥수수밭 안에서 옥수수를 수확한 칸으로만 돌아다니면서 현재 위치한 칸에서 상하좌우로 인접한 칸의 옥수수를 수확할 수 있다.</p>
 
