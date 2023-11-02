@@ -6,12 +6,10 @@ public class Main {
     static List<Node>[] graph;
     static int v;
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        v = Integer.parseInt(st.nextToken());
-        int e = Integer.parseInt(st.nextToken());
-        int p = Integer.parseInt(st.nextToken());
+        v = read();
+        int e = read();
+        int p = read();
 
         graph = new ArrayList[v + 1];
 
@@ -20,10 +18,9 @@ public class Main {
         }
 
         for (int i = 0; i < e; i++) {
-            st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
-            int weight = Integer.parseInt(st.nextToken());
+            int from = read();
+            int to = read();
+            int weight = read();
 
             graph[from].add(new Node(to, weight));
             graph[to].add(new Node(from, weight));
@@ -65,5 +62,13 @@ public class Main {
             this.idx = idx;
             this.weight = weight;
         }
+    }
+
+    private static int read() throws IOException {
+        int c, n = System.in.read() & 15;
+        while ((c = System.in.read()) > 32) {
+            n = (n << 3) + (n << 1) + (c & 15);
+        }
+        return n;
     }
 }
