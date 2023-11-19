@@ -24,7 +24,11 @@ public class Main {
         visited = new boolean[26];
         visited[map[0][0] - 65] = true;
         dfs(0, 0, 1);
-        System.out.println(result);
+        if(r == 1 && c == 1){
+            System.out.println(1);
+        }else{
+            System.out.println(result);
+        }
     }
 
     public static void dfs(int x, int y, int count) {
