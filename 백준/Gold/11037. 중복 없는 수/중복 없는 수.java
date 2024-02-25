@@ -1,56 +1,40 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+    static boolean[] visited = new boolean[10];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-	public static void main(String[] args) throws IOException {
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		String input = "";
-		
-		while((input = br.readLine()) != null) {
-			int num = Integer.parseInt(input);
-			while(true) {
-				if(num >= 987654321) {
-					sb.append(0).append("\n");
-					break;
-				}
-				if(isCheck(++num)) {
-					sb.append(num).append("\n");
-					break;
-				}
-			}
-			
-		}// while 끝
-		
-		System.out.println(sb.toString());
-		
-	} //end main
+        StringBuilder sb = new StringBuilder();
+        String s = "";
+        while((s = br.readLine()) != null){
+            int n = Integer.parseInt(s);
+            int result = 0;
+            while(++n <= 999_999_999){
+                if(isDuplicate(n)){
+                    result = n;
+                    break;
+                }
 
-	private static boolean isCheck(int n) {
-		int num  = n;
-		boolean[] visited = new boolean[10];
-		//
-		while(true) {
-			if(num == 0) {
-				break;
-			}
-			int temp = num % 10;
-			if(temp == 0) {
-				return false;
-			}
-			if(visited[temp]) {
-				return false;
-			}
-			visited[temp] = true;
-			num = num / 10;
-		}
-		
-		return true;
-	}
-	
-	
+            }
+            sb.append(result).append("\n");
+        }
+        System.out.println(sb);
+    }
 
-}//end class
+    static boolean isDuplicate(int n){
+        Arrays.fill(visited, false);
+        while(n > 0){
+            int digit = n % 10;
+            if(digit == 0) return false;
+            if(visited[digit]){
+                return false;
+            }else{
+                visited[digit] = true;
+            }
+            n /= 10;
+        }
+        return true;
+    }
+}
