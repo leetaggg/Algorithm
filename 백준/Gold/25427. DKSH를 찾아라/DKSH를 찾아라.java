@@ -3,39 +3,41 @@ import java.util.*;
 
 public class Main {
 
-    static final char[] dksh = {'D', 'K', 'S', 'H'};
-    static int cnt;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int n = Integer.parseInt(br.readLine());
 
-        char[] chars = br.readLine().toCharArray();
-        boolean[] visited = new boolean[n];
-        cnt = 0;
+        String str = br.readLine();
+        String target = "DKSH";
 
-        char[] selectedChars = new char[4];
-
-        backTracking(chars, selectedChars, visited, 0, n, 0);
-        System.out.println(cnt);
+        System.out.println(countSubsequences(str, target));
     }
 
-    static void backTracking(char[] chars, char[] selectedChars, boolean[] visited, int depth, int limit, int start) {
-        if (depth == 4) {
-            if (Arrays.equals(selectedChars, dksh)) {
-                cnt++;
-            }
-            return;
+    public static int countSubsequences(String str, String target) {
+        int m = str.length();
+        int n = target.length();
+
+        int[][] dp = new int[m + 1][n + 1];
+
+        for (int j = 0; j <= n; j++) {
+            dp[0][j] = 0;
         }
 
-        for (int i = start; i < limit; i++) {
-            if (!visited[i] && (chars[i] == 'D' || chars[i] == 'K' || chars[i] == 'S' || chars[i] == 'H')) {
-                visited[i] = true;
-                selectedChars[depth] = chars[i];
-                backTracking(chars, selectedChars, visited, depth + 1, limit, i + 1);
-                visited[i] = false;
+        for (int i = 0; i <= m; i++) {
+            dp[i][0] = 1;
+        }
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (str.charAt(i - 1) == target.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
             }
         }
+
+        return dp[m][n];
     }
 }
