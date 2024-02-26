@@ -14,11 +14,11 @@ public class Main {
         System.out.println(countSubsequences(str, target));
     }
 
-    public static int countSubsequences(String str, String target) {
+    public static long countSubsequences(String str, String target) {
         int m = str.length();
         int n = target.length();
 
-        int[][] dp = new int[m + 1][n + 1];
+        long[][] dp = new long[m + 1][n + 1];
 
         for (int j = 0; j <= n; j++) {
             dp[0][j] = 0;
