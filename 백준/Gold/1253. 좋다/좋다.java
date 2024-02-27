@@ -24,7 +24,7 @@ public class Main {
             int right = n - 1;
 
             while(left < right){
-                long sum = arr[left] + arr[right];
+                int sum = arr[left] + arr[right];
 
                 if(left == i){
                     left++;
