@@ -22,7 +22,7 @@ public class Main {
             countArr[section[i]]++;
             if(countArr[section[i]] == requiredCnt){
                 System.out.println("YES");
-                System.exit(0);
+                return;
             }
         }
 
@@ -30,16 +30,14 @@ public class Main {
             section[i] = Integer.parseInt(st.nextToken());
         }
 
-        boolean flag = false;
-
         for (int i = 0; i < n - m; i++) {
             countArr[section[m + i]]++;
             countArr[section[i]]--;
             if(countArr[section[m + i]] == requiredCnt){
-                flag = true;
-                break;
+                System.out.println("YES");
+                return;
             }
         }
-        System.out.println(flag ? "YES" : "NO");
+        System.out.println("NO");
     }
 }
